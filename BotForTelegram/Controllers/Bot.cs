@@ -37,22 +37,5 @@ namespace BotForTelegram.Controllers
             await botClient.SetWebhookAsync(hook);
             return botClient;
         }
-
-        public static void StartedReceivingForBot()
-        {
-            if (botClient == null)
-            {
-                commandsList = new List<Command>();
-                commandsList.Add(new StartCommand());
-                //TODO: Add more commands
-
-                botClient = new TelegramBotClient(AppSettings.Key);
-
-                botClient.OnMessage += new MessageController().ExecutingCommandsForDebuging;
-
-                botClient.StartReceiving();
-
-            }
-        }
     }
 }

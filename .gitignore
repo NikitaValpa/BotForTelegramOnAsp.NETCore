@@ -338,3 +338,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/ngrok.exe
+
+# Ignore SettingsFile for Bot
+BotForTelegram/Models/AppSettings.cs
