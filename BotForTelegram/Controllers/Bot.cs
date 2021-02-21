@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using BotForTelegram.Models;
 using BotForTelegram.Models.Commands;
+using Microsoft.Extensions.Logging;
+using Telegram.Bot.Args;
 
 namespace BotForTelegram.Controllers
 {
@@ -13,12 +15,13 @@ namespace BotForTelegram.Controllers
     /// </summary>
     public static class Bot
     {
-        private static TelegramBotClient botClient;
+
+        public static TelegramBotClient botClient;
         private static List<Command> commandsList;
 
         public static IReadOnlyList<Command> Commands => commandsList.AsReadOnly();
 
-        public static async Task<TelegramBotClient> GetBotClientAsync()
+        public static async Task<TelegramBotClient> GetBotClientAsWebhookAsync()
         {
             if (botClient != null)
             {
@@ -33,6 +36,23 @@ namespace BotForTelegram.Controllers
             string hook = string.Format(AppSettings.Url, "api/message/update");
             await botClient.SetWebhookAsync(hook);
             return botClient;
+        }
+
+        public static void StartedReceivingForBot()
+        {
+            if (botClient == null)
+            {
+                commandsList = new List<Command>();
+                commandsList.Add(new StartCommand());
+                //TODO: Add more commands
+
+                botClient = new TelegramBotClient(AppSettings.Key);
+
+                botClient.OnMessage += new MessageController().ExecutingCommandsForDebuging;
+
+                botClient.StartReceiving();
+
+            }
         }
     }
 }
