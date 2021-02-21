@@ -20,7 +20,7 @@ namespace BotForTelegram
         {
             Configuration = configuration;
         }
-
+        
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -30,7 +30,7 @@ namespace BotForTelegram
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -43,7 +43,17 @@ namespace BotForTelegram
 
             app.UseAuthorization();
 
-            Bot.GetBotClientAsync().Wait();
+            /* ≈сли мы запускаем наше приложение локально на компе, например дл€ дебагинга, то метод опроса нашего бота другой,
+              иначе если мы деплоем приложение на хост, то использем вебхуки дл€ работы с ботом*/
+            logger.LogInformation("«начение переменной окружени€ " + env.EnvironmentName);
+            if (env.EnvironmentName == "Development")
+            {
+                Bot.StartedReceivingForBot();
+            }
+            else
+            {
+                Bot.GetBotClientAsWebhookAsync().Wait();
+            }
 
             app.UseEndpoints(endpoints =>
             {
