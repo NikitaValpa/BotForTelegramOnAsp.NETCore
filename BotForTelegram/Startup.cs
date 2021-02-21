@@ -26,7 +26,8 @@ namespace BotForTelegram
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,17 +44,8 @@ namespace BotForTelegram
 
             app.UseAuthorization();
 
-            /* ≈сли мы запускаем наше приложение локально на компе, например дл€ дебагинга, то метод опроса нашего бота другой,
-              иначе если мы деплоем приложение на хост, то использем вебхуки дл€ работы с ботом*/
-            logger.LogInformation("«начение переменной окружени€ " + env.EnvironmentName);
-            if (env.EnvironmentName == "Development")
-            {
-                Bot.StartedReceivingForBot();
-            }
-            else
-            {
-                Bot.GetBotClientAsWebhookAsync().Wait();
-            }
+            Bot.GetBotClientAsWebhookAsync().Wait();
+
 
             app.UseEndpoints(endpoints =>
             {

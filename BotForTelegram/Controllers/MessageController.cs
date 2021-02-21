@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot;
+using System.Net.Http;
 using Telegram.Bot.Types;
 using Telegram.Bot.Args;
+using System.Net.Http.Headers;
 
 namespace BotForTelegram.Controllers
 {
@@ -15,10 +17,23 @@ namespace BotForTelegram.Controllers
     {
         [HttpGet]
         [Route("/")]
-        public string Get()
+        public ContentResult Get()
         {
-            return "Вас приветствует foul_bot, для общения со мной перейдите по ссылке \n" +
-                "<a href=\"t.me/fl_language_bot\">t.me/fl_language_bot</a>";
+            return new ContentResult
+            {
+                ContentType = "text/html",
+                StatusCode = (int)System.Net.HttpStatusCode.OK,
+                Content = "<!DOCTYPE html>"+
+                            "<html>"+
+                                "<head>"+
+                                    "<meta charset=\"utf-8\">" +
+                                    "<title>Foul_bot</title>" +
+                                "</head>"+
+                                "<body>"+
+                                    "<p> Вас приветствует foul_bot, для общения со мной перейдите по ссылке \n <a href=\"https://t.me/fl_language_bot\">t.me/fl_language_bot</a></p>" +
+                                "</body>" +
+                            "</html>"
+            };
         }
         [HttpPost]
         [Route("api/message/update")]
@@ -41,30 +56,6 @@ namespace BotForTelegram.Controllers
                 }
             }
             return Ok();
-        }
-        /// <summary>
-        /// Этот метод создан для дебаггинга на компьютере разработчика и вызывается только в случае запуска на консоли
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public async void ExecutingCommandsForDebuging(object sender, MessageEventArgs e) {
-            if (e.Message.Text != null) {
-                var commands = Bot.Commands;
-                var message = e.Message;
-
-                foreach (var command in commands) {
-                    if (command.Contains(message))
-                    {
-                        if (Bot.botClient != null)
-                        {
-                            await command.Execute(message, Bot.botClient);
-                        }
-                        break;
-                    }
-                }
-
-
-            }
         }
     }
 }
