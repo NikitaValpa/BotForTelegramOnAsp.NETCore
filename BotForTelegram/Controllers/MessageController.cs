@@ -45,6 +45,9 @@ namespace BotForTelegram.Controllers
             var message = update.Message;
             var botClient = await Bot.GetBotClientAsWebhookAsync();
 
+            bool helpTrigger = true;
+            string messageForClient = "";
+
             /*Итерируем комманды которые запихали в список при инициализации нашего бот клиента и запускаем 
              * ту комманду на выполнение, которая содержит в тот message которы пришёл к нам в метод через объект update*/
             foreach (var command in commands)
@@ -52,8 +55,17 @@ namespace BotForTelegram.Controllers
                 if (command.Contains(message))
                 {
                     await command.Execute(message, botClient);
+                    helpTrigger = false;
                     break;
                 }
+            }
+            if (helpTrigger)
+            {
+                foreach (var item in Bot.Commands)
+                {
+                    messageForClient += item.Name + " " + item.Discription + "\n";
+                }
+                await botClient.SendTextMessageAsync(message.Chat.Id, "Я не понимаю, что вы от меня хотите, вот список поддерживаемых мною комманд: \n" + messageForClient, Telegram.Bot.Types.Enums.ParseMode.Markdown);
             }
             return Ok();
         }

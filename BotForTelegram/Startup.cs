@@ -46,7 +46,6 @@ namespace BotForTelegram
 
             Bot.GetBotClientAsWebhookAsync().Wait();
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

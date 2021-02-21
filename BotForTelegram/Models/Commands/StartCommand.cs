@@ -14,6 +14,8 @@ namespace BotForTelegram.Models.Commands
     {
         public override string Name => @"/start";
 
+        public override string Discription => "Начальная комманда для приветсвия новых пользователей";
+
         public override bool Contains(Message message)
         {
             if (message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
@@ -24,7 +26,7 @@ namespace BotForTelegram.Models.Commands
         public override async Task Execute(Message message, TelegramBotClient botClient)
         {
             var chatId = message.Chat.Id;
-            await botClient.SendTextMessageAsync(chatId, "Hallo, I'm ASP.NET Core Bot", parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
+            await botClient.SendTextMessageAsync(chatId, $"Привет {message.From.Username}, пока что я мало что умею. Если хочешь посмотреть, что я умею, набери комманду /help", parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
         }
     }
 

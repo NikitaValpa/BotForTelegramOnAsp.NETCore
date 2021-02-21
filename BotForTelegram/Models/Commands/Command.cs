@@ -18,6 +18,11 @@ namespace BotForTelegram.Models.Commands
         public abstract string Name { get; }
 
         /// <summary>
+        /// Описание комманды
+        /// </summary>
+        public abstract string Discription { get; }
+
+        /// <summary>
         /// Метод который непосредственно выполняет комманду
         /// </summary>
         /// <param name="message"></param>
