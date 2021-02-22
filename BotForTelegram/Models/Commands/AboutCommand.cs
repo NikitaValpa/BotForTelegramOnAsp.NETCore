@@ -9,30 +9,26 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace BotForTelegram.Models.Commands
 {
-    public class HelpCommand : Command
+    public class AboutCommand : Command
     {
-        public override string Name => @"/help";
+        public override string Name => @"/about";
 
-        public override string Discription => "Комманда для вывода списка комманд";
+        public override string Discription => "О боте";
 
         public override bool Contains(Message message)
         {
             if (message.Type != Telegram.Bot.Types.Enums.MessageType.Text)
                 return false;
 
-            return message.Text.Contains(Name) || message.Text.Contains("Помощь");
+            return message.Text.Contains(Name) || message.Text.Contains("О боте");
         }
 
-        public override async Task Execute(Message message, TelegramBotClient botClient)
+        public async override Task Execute(Message message, TelegramBotClient botClient)
         {
             var chatId = message.Chat.Id;
-            string messageForClient = "";
-            foreach (var command in Bot.Commands)
-            {
-                messageForClient += command.Name + " - " + command.Discription + "\n";
-            }
-            await botClient.SendTextMessageAsync(chatId: chatId, 
-                text: messageForClient, 
+            await botClient.SendTextMessageAsync(
+                chatId: chatId,
+                text: $"Я пока что ещё не придумал для чего предназначен этот бот, как только придумаю, здесь будет это написано",
                 replyMarkup: new ReplyKeyboardMarkup(KeyBoards.keyboardButtons, resizeKeyboard: true),
                 parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
         }

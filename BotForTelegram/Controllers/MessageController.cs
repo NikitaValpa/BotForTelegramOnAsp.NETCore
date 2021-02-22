@@ -9,6 +9,8 @@ using System.Net.Http;
 using Telegram.Bot.Types;
 using Telegram.Bot.Args;
 using System.Net.Http.Headers;
+using Telegram.Bot.Types.ReplyMarkups;
+using BotForTelegram.Models;
 
 namespace BotForTelegram.Controllers
 {
@@ -59,13 +61,17 @@ namespace BotForTelegram.Controllers
                     break;
                 }
             }
+
             if (helpTrigger)
             {
                 foreach (var item in Bot.Commands)
                 {
-                    messageForClient += item.Name + " " + item.Discription + "\n";
+                    messageForClient += item.Name + " - " + item.Discription + "\n";
                 }
-                await botClient.SendTextMessageAsync(message.Chat.Id, "Я не понимаю, что вы от меня хотите, вот список поддерживаемых мною комманд: \n" + messageForClient, Telegram.Bot.Types.Enums.ParseMode.Markdown);
+                await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
+                    text: "Я не понимаю, что вы от меня хотите, вот список поддерживаемых мною комманд: \n" + messageForClient,
+                    replyMarkup: new ReplyKeyboardMarkup(KeyBoards.keyboardButtons, resizeKeyboard: true),
+                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
             }
             return Ok();
         }

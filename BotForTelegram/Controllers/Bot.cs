@@ -31,11 +31,13 @@ namespace BotForTelegram.Controllers
             commandsList = new List<Command>();
             commandsList.Add(new StartCommand());
             commandsList.Add(new HelpCommand());
+            commandsList.Add(new AboutCommand());
             //TODO: Add more commands
 
             botClient = new TelegramBotClient(AppSettings.Key);
             string hook = string.Format(AppSettings.Url, "api/message/update");
             await botClient.SetWebhookAsync(hook);
+
             return botClient;
         }
     }
