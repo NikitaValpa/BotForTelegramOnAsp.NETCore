@@ -7,6 +7,7 @@ using BotForTelegram.Models;
 using BotForTelegram.Models.Commands;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Args;
+using System.Reflection;
 
 namespace BotForTelegram.Controllers
 {
@@ -32,6 +33,7 @@ namespace BotForTelegram.Controllers
             commandsList.Add(new StartCommand());
             commandsList.Add(new HelpCommand());
             commandsList.Add(new AboutCommand());
+
             //TODO: Add more commands
 
             botClient = new TelegramBotClient(AppSettings.Key);
