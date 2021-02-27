@@ -33,6 +33,7 @@ namespace BotForTelegram.Controllers
             commandsList.Add(new StartCommand());
             commandsList.Add(new HelpCommand());
             commandsList.Add(new AboutCommand());
+            commandsList.Add(new GetWeatherCommand());
 
             //TODO: Add more commands
 
