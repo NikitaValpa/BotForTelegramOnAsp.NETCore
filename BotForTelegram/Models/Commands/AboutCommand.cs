@@ -28,7 +28,7 @@ namespace BotForTelegram.Models.Commands
             var chatId = message.Chat.Id;
             await botClient.SendTextMessageAsync(
                 chatId: chatId,
-                text: $"Я пока что ещё не придумал для чего предназначен этот бот, как только придумаю, здесь будет это написано",
+                text: $"Этот бот может выдавать вам погодные данные разных городов с помощью OpenWeatherAPI, для того чтобы посмотреть список комманд, наберите /help",
                 replyMarkup: new ReplyKeyboardMarkup(KeyBoards.keyboardButtons, resizeKeyboard: true),
                 parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
         }

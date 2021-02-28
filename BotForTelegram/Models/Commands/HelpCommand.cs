@@ -29,6 +29,9 @@ namespace BotForTelegram.Models.Commands
             string messageForClient = "";
             foreach (var command in Bot.Commands)
             {
+                if (command.Name == Name) {
+                    continue;
+                }
                 messageForClient += command.Name + " - " + command.Discription + "\n";
             }
             await botClient.SendTextMessageAsync(chatId: chatId, 

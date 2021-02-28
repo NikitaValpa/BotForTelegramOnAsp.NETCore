@@ -44,7 +44,21 @@ namespace BotForTelegram.Controllers
             if (update == null) return Ok();
 
             var commands = Bot.Commands;
-            var message = update.Message;
+            Message message = null;
+            if (update.Message != null)
+            {
+                message = update.Message;
+            }
+            else if (update.CallbackQuery != null)
+            {
+                message = update.CallbackQuery.Message;
+            }
+            else
+            {
+                return Ok();
+            }
+
+
             var botClient = await Bot.GetBotClientAsWebhookAsync();
 
             bool helpTrigger = true;
@@ -52,26 +66,29 @@ namespace BotForTelegram.Controllers
 
             /*Итерируем комманды которые запихали в список при инициализации нашего бот клиента и запускаем 
              * ту комманду на выполнение, которая содержит в тот message которы пришёл к нам в метод через объект update*/
-            foreach (var command in commands)
+            if (message != null)
             {
-                if (command.Contains(message))
+                foreach (var command in commands)
                 {
-                    await command.Execute(message, botClient);
-                    helpTrigger = false;
-                    break;
+                    if (command.Contains(message))
+                    {
+                        await command.Execute(message, botClient);
+                        helpTrigger = false;
+                        break;
+                    }
                 }
-            }
 
-            if (helpTrigger)
-            {
-                foreach (var item in Bot.Commands)
+                if (helpTrigger && message.Type == Telegram.Bot.Types.Enums.MessageType.Text)
                 {
-                    messageForClient += item.Name + " - " + item.Discription + "\n";
+                    foreach (var item in Bot.Commands)
+                    {
+                        messageForClient += item.Name + " - " + item.Discription + "\n";
+                    }
+                    await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
+                        text: "Я не понимаю, что вы от меня хотите, вот список поддерживаемых мною комманд: \n" + messageForClient,
+                        replyMarkup: new ReplyKeyboardMarkup(KeyBoards.keyboardButtons, resizeKeyboard: true),
+                        parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
                 }
-                await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
-                    text: "Я не понимаю, что вы от меня хотите, вот список поддерживаемых мною комманд: \n" + messageForClient,
-                    replyMarkup: new ReplyKeyboardMarkup(KeyBoards.keyboardButtons, resizeKeyboard: true),
-                    parseMode: Telegram.Bot.Types.Enums.ParseMode.Markdown);
             }
             return Ok();
         }
